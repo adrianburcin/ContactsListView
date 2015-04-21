@@ -1,12 +1,8 @@
 package com.example.adrianb.contactlistview;
 
-import android.support.v4.app.Fragment;
-import android.app.Service;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -14,12 +10,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +47,12 @@ public class ContactListFragment extends ListFragment {
     private View contactListView;
     private EditText inputSearch;
     private TextView animatedText;
-    private Animation out;
+
+    private HashMap<String, ContactItem> contacts;
+
+    public ContactListFragment(HashMap<String, ContactItem> contacts) {
+        this.contacts = contacts;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,60 +60,23 @@ public class ContactListFragment extends ListFragment {
         contactListView = inflater.inflate(R.layout.list_alphabet, container, false);
 
         inputSearch = (EditText) contactListView.findViewById(R.id.inputSearch);
-        inputSearch.setHint(Html.fromHtml("<font size=\"10\">" + "search_contacts_hint" + "</font>"));
-        inputSearch.setHintTextColor(Color.parseColor("#88888a"));
-
+        animatedText = (TextView) contactListView.findViewById(R.id.animated_letter);
         sideIndex = (LinearLayout) contactListView.findViewById(R.id.sideIndex);
 
-        RelativeLayout listAlphabetLayout = (RelativeLayout) contactListView.findViewById(R.id.list_alphabet_layout);
-
-        animatedText = (TextView) contactListView.findViewById(R.id.animated_letter);
-        out = new AlphaAnimation(1.0f, 0.0f);
-        out.setDuration(1000);
-        out.setAnimationListener(new Animation.AnimationListener() {
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                animatedText.setVisibility(View.GONE);
-                Log.d("onAnimationEnd", "setVisibility(View.GONE);");
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-
         inputSearch.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
                 adapter.getFilter().filter(s);
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-                // TODO Auto-generated method stub
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-
-            }
+            public void afterTextChanged(Editable s) { }
         });
 
-        displayContactList(MainActivity.contacts);
+        displayContactList(this.contacts);
 
         return contactListView;
     }
@@ -189,8 +150,8 @@ public class ContactListFragment extends ListFragment {
         } else if(event.getAction() == MotionEvent.ACTION_UP) {
             Log.d("handleAnimatedLetter", "ACTION_UP");
             if(animatedText.getVisibility() == View.VISIBLE) {
-                animatedText.startAnimation(out);
-                Log.d("handleAnimatedLetter", "setAnimation(out);");
+                animatedText.setVisibility(View.GONE);
+                Log.d("handleAnimatedLetter", "setVisibility(View.GONE);");
             }
         }
 
@@ -298,9 +259,9 @@ public class ContactListFragment extends ListFragment {
         Cell item = (Cell) v.getTag();
         if(item instanceof Row) {
             //Your contact/item handling code here
-            Toast.makeText(getActivity(), item.text + " " + MainActivity.contacts.get(item.text).getPhoneNumber(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), item.text + " " + this.contacts.get(item.text).getPhoneNumber(), Toast.LENGTH_SHORT).show();
             HashMap<String, String> chosenContact = new HashMap<String, String>();
-            chosenContact.put(item.text, MainActivity.contacts.get(item.text).getPhoneNumber());
+            chosenContact.put(item.text, this.contacts.get(item.text).getPhoneNumber());
         }
 
         super.onListItemClick(l, v, position, id);

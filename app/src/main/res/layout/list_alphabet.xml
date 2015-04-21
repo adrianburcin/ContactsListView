@@ -13,25 +13,27 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#cac9cf">
+            android:background="#f7f7f7">
 
             <!-- Editext for Search -->
 
             <EditText
                 android:id="@+id/inputSearch"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_gravity="center|center_horizontal"
-                android:textColor="#020202"
-                android:drawableLeft="@android:drawable/ic_search_category_default"
-                android:hint="Bla"
+                android:drawablePadding="10dp"
+                android:drawableLeft="@android:drawable/ic_menu_search"
+                android:hint="Search"
                 android:background="@drawable/roundedsearchfield"
-                android:inputType="textVisiblePassword" />
+                android:inputType="textVisiblePassword"
+                android:textSize="12sp"
+                />
 
         </LinearLayout>
 
